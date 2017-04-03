@@ -2,6 +2,11 @@
 module OpenSolid.Point2d
 
 open OpenSolid.Vector2d
+open OpenSolid.Direction2d
+
+[<Struct>]
+type Point2d =
+    Point2d of (float * float)
 
 type Point2d with
     static member coordinates (Point2d coordinates_) =
@@ -19,6 +24,21 @@ type Point2d with
     static member polar (r, theta) =
         Point2d (r * cos theta, r * sin theta)
 
+    static member (+) (point, vector) =
+        let (px, py) = Point2d.coordinates point
+        let (vx, vy) = Vector2d.components vector
+        Point2d (px + vx, py + vy)
+
+    static member (-) (point, vector) =
+        let (px, py) = Point2d.coordinates point
+        let (vx, vy) = Vector2d.components vector
+        Point2d (px - vx, py - vy)
+
+    static member (-) (firstPoint, secondPoint) =
+        let (x1, y1) = Point2d.coordinates firstPoint
+        let (x2, y2) = Point2d.coordinates secondPoint
+        Vector2d (x1 - x2, y1 - y2)
+
     static member interpolateFrom firstPoint secondPoint parameter =
         let (x1, y1) = Point2d.coordinates firstPoint
         let (x2, y2) = Point2d.coordinates secondPoint
@@ -29,18 +49,14 @@ type Point2d with
     static member midpoint first second =
         Point2d.interpolateFrom first second 0.5
 
+    static member vectorFrom (firstPoint : Point2d) (secondPoint : Point2d) =
+        secondPoint - firstPoint
+
     static member squaredDistanceFrom firstPoint secondPoint =
-        let (x1, y1) = Point2d.coordinates firstPoint
-        let (x2, y2) = Point2d.coordinates secondPoint
-        let dx = x2 - x1
-        let dy = y2 - y1
-        dx * dx + dy * dy
+        Vector2d.squaredLength (Point2d.vectorFrom firstPoint secondPoint)
 
     static member distanceFrom firstPoint secondPoint =
         sqrt (Point2d.squaredDistanceFrom firstPoint secondPoint)
-
-    static member vectorFrom (firstPoint : Point2d) (secondPoint : Point2d) =
-        secondPoint - firstPoint
 
     static member equalWithin tolerance firstPoint secondPoint =
         let squaredDistance = Point2d.squaredDistanceFrom firstPoint secondPoint
@@ -50,9 +66,7 @@ type Point2d with
         Vector2d.direction (Point2d.vectorFrom firstPoint secondPoint)
 
     static member scaleAbout centerPoint scale point =
-        let (x0, y0) = Point2d.coordinates centerPoint
-        let (x, y) = Point2d.coordinates point
-        Point2d (x0 + scale * (x - x0), y0 + scale * (y - y0))
+        centerPoint + scale * (point - centerPoint)
 
 
 //  rotateAround

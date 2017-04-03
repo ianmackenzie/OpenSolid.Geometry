@@ -1,6 +1,10 @@
 [<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Vector2d
 
+[<Struct>]
+type Vector2d =
+    Vector2d of (float * float)
+
 type Vector2d with
     static member components (Vector2d components_) =
         components_
@@ -18,7 +22,34 @@ type Vector2d with
         Vector2d (r * cos theta, r * sin theta)
 
     static member perpendicularTo vector =
-        Vector2d (-Vector2d.yComponent vector, Vector2d.xComponent vector)
+        let (x, y) = Vector2d.components vector
+        Vector2d (-y, x)
+
+    static member (~-) vector =
+        let (x, y) = Vector2d.components vector
+        Vector2d(-x, -y)
+
+    static member (+) (firstVector, secondVector) =
+        let (x1, y1) = Vector2d.components firstVector
+        let (x2, y2) = Vector2d.components secondVector
+        Vector2d (x1 + x2, y1 + y2)
+
+    static member (-) (firstVector, secondVector) =
+        let (x1, y1) = Vector2d.components firstVector
+        let (x2, y2) = Vector2d.components secondVector
+        Vector2d (x1 - x2, y1 - y2)
+
+    static member (*) (scale, vector) =
+        let (x, y) = Vector2d.components vector
+        Vector2d (scale * x, scale * y)
+
+    static member (*) (vector, scale) =
+        let (x, y) = Vector2d.components vector
+        Vector2d (x * scale, y * scale)
+
+    static member (/) (vector, scale) =
+        let (x, y) = Vector2d.components vector
+        Vector2d (x / scale, y / scale)
 
     static member interpolateFrom firstVector secondVector parameter =
         let (x1, y1) = Vector2d.components firstVector
@@ -28,11 +59,7 @@ type Vector2d with
         Vector2d (x, y)
 
     static member equalWithin tolerance firstVector secondVector =
-        let (x1, y1) = Vector2d.components firstVector
-        let (x2, y2) = Vector2d.components secondVector
-        let dx = x2 - x1
-        let dy = y2 - y1
-        dx * dx + dy * dy <= tolerance * tolerance
+        Vector2d.squaredLength (secondVector - firstVector) <= tolerance * tolerance
 
     static member squaredLength vector =
         let (x, y) = Vector2d.components vector
@@ -40,22 +67,6 @@ type Vector2d with
 
     static member length vector =
         sqrt (Vector2d.squaredLength vector)
-
-    static member direction vector =
-        let length = Vector2d.length vector
-        if length > 0.0 then
-            let (x, y) = Vector2d.components vector
-            Some (Direction2d (x / length, y / length))
-        else
-            None
-
-    static member lengthAndDirection vector =
-        let length = Vector2d.length vector
-        if length > 0.0 then
-            let (x, y) = Vector2d.components vector
-            Some (length, Direction2d (x / length, y / length))
-        else
-            None
 
     static member dotProduct firstVector secondVector =
         let (x1, y1) = Vector2d.components firstVector

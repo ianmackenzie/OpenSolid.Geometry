@@ -3,6 +3,10 @@ module OpenSolid.Direction2d
 
 open OpenSolid.Vector2d
 
+[<Struct>]
+type Direction2d =
+    Direction2d of (float * float)
+
 type Direction2d with
     static member components (Direction2d components_) =
         components_
@@ -13,10 +17,13 @@ type Direction2d with
     static member yComponent (Direction2d (_, y)) =
         y
 
+    static member toVector direction =
+        Vector2d (Direction2d.components direction)
+
     static member componentIn firstDirection secondDirection =
-        let (x1, y1) = Direction2d.components firstDirection
-        let (x2, y2) = Direction2d.components secondDirection
-        x1 * x2 + y1 * y2
+        let firstVector = Direction2d.toVector firstDirection
+        let secondVector = Direction2d.toVector secondDirection
+        Vector2d.dotProduct firstVector secondVector
 
     static member x =
         Direction2d (1.0, 0.0)
@@ -35,18 +42,27 @@ type Direction2d with
         let (x, y) = Direction2d.components direction
         Direction2d (-y, x)
 
+    static member (~-) direction =
+        let (x, y) = Direction2d.components direction
+        Direction2d (-x, -y)
+
+    static member (*) (scale, direction) =
+        let (x, y) = Direction2d.components direction
+        Vector2d (scale * x, scale * y)
+
+    static member (*) (direction, scale) =
+        let (x, y) = Direction2d.components direction
+        Vector2d (x * scale, y * scale)
+
     static member angleFrom other direction =
-        let (x0, y0) = Direction2d.components other
-        let (x1, y1) = Direction2d.components direction
-        let x = x0 * x1 + y0 * y1
-        let y = x0 * y1 - y0 * x1
+        let otherVector = Direction2d.toVector other
+        let directionVector = Direction2d.toVector direction
+        let y = Vector2d.crossProduct otherVector directionVector
+        let x = Vector2d.dotProduct otherVector directionVector
         atan2 y x
 
     static member equalWithin tolerance firstDirection secondDirection =
         abs (Direction2d.angleFrom firstDirection secondDirection) <= tolerance
-
-    static member toVector direction =
-        Vector2d (Direction2d.components direction)
 
     static member flip (direction : Direction2d) =
         -direction
@@ -60,13 +76,26 @@ type Direction2d with
 
 type Vector2d with
     static member in_ direction length =
-        let (x, y) = Direction2d.components direction
-        Vector2d (length * x, length * y)
+        length * direction
 
     static member componentIn direction vector =
-        let (dx, dy) = Direction2d.components direction
-        let (vx, vy) = Vector2d.components vector
-        vx * dx + vy * dy
+        Vector2d.dotProduct vector (Direction2d.toVector direction)
+
+    static member direction vector =
+        let length = Vector2d.length vector
+        if length > 0.0 then
+            let (x, y) = Vector2d.components vector
+            Some (Direction2d (x / length, y / length))
+        else
+            None
+
+    static member lengthAndDirection vector =
+        let length = Vector2d.length vector
+        if length > 0.0 then
+            let (x, y) = Vector2d.components vector
+            Some (length, Direction2d (x / length, y / length))
+        else
+            None
 
 
 

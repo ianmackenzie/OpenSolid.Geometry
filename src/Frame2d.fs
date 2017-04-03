@@ -3,8 +3,18 @@ module OpenSolid.Frame2d
 
 open OpenSolid.Point2d
 open OpenSolid.Direction2d
+open OpenSolid.Axis2d
 
-type Frame2d with
+type Frame2d(originPoint : Point2d, xDirection : Direction2d, yDirection : Direction2d) =
+    member inline internal this._originPoint =
+        originPoint
+
+    member inline internal this._xDirection =
+        xDirection
+
+    member inline internal this._yDirection =
+        yDirection
+
     static member originPoint (frame : Frame2d) =
         frame._originPoint
 
@@ -55,7 +65,6 @@ type Frame2d with
             let xDirection = rotateDirection (Frame2d.xDirection frame)
             let yDirection = rotateDirection (Frame2d.yDirection frame)
             Frame2d (originPoint, xDirection, yDirection)
-
 
 type Point2d with
     static member in_ frame coordinates =

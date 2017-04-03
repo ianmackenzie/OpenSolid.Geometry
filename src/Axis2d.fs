@@ -4,7 +4,13 @@ module OpenSolid.Axis2d
 open OpenSolid.Point2d
 open OpenSolid.Direction2d
 
-type Axis2d with
+type Axis2d(originPoint : Point2d, direction : Direction2d) =
+    member inline internal this._originPoint =
+        originPoint
+
+    member inline internal this._direction =
+        direction
+
     static member originPoint(axis : Axis2d) =
         axis._originPoint
 
