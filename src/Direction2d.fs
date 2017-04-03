@@ -97,6 +97,9 @@ type Vector2d with
         else
             None
 
+    static member projectionIn direction vector =
+        Vector2d.in_ direction (Vector2d.componentIn direction vector)
+
 
 
 // mirrorAcross

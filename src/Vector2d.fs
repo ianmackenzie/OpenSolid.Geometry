@@ -93,7 +93,6 @@ type Vector2d with
 
 
 // mirrorAcross
-// projectionIn
 // projectOnto
 // relativeTo
 // placeIn
