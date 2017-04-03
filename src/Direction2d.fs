@@ -57,8 +57,8 @@ type Direction2d with
     static member angleFrom other direction =
         let otherVector = Direction2d.toVector other
         let directionVector = Direction2d.toVector direction
-        let y = Vector2d.crossProduct otherVector directionVector
         let x = Vector2d.dotProduct otherVector directionVector
+        let y = Vector2d.crossProduct otherVector directionVector
         atan2 y x
 
     static member equalWithin tolerance firstDirection secondDirection =
