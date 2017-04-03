@@ -43,15 +43,15 @@ type Frame2d(originPoint : Point2d, xDirection : Direction2d, yDirection : Direc
 
     static member flipX frame =
         let originPoint = Frame2d.originPoint frame
-        let xDirection = Direction2d.flip (Frame2d.xDirection frame)
+        let xDirection = Frame2d.xDirection frame
         let yDirection = Frame2d.yDirection frame
-        Frame2d (originPoint, xDirection, yDirection)
+        Frame2d (originPoint, Direction2d.flip xDirection, yDirection)
 
     static member flipY frame =
         let originPoint = Frame2d.originPoint frame
         let xDirection = Frame2d.xDirection frame
-        let yDirection = Direction2d.flip (Frame2d.yDirection frame)
-        Frame2d (originPoint, xDirection, yDirection)
+        let yDirection = Frame2d.yDirection frame
+        Frame2d (originPoint, xDirection, Direction2d.flip yDirection)
 
     static member moveTo point frame =
         let xDirection = Frame2d.xDirection frame
