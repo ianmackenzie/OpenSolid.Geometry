@@ -22,12 +22,12 @@ type Point2d with
     static member along axis distance =
         Axis2d.originPoint axis + distance * Axis2d.direction axis
 
-    static member distanceAlong axis =
-        Point2d.vectorFrom (Axis2d.originPoint axis)
+    static member distanceAlong axis point =
+        Point2d.vectorFrom (Axis2d.originPoint axis) point
             |> Vector2d.componentIn (Axis2d.direction axis)
 
     static member signedDistanceFrom axis point =
-        let displacement = Point2d.vectorFrom (Axis2d.originPoint axis)
+        let displacement = Point2d.vectorFrom (Axis2d.originPoint axis) point
         let directionVector = Direction2d.toVector (Axis2d.direction axis)
         Vector2d.crossProduct directionVector displacement
 
