@@ -4,6 +4,7 @@ open System
 open Xunit
 open OpenSolid.Vector2d
 open OpenSolid.Point2d
+open OpenSolid.Scalar
 
 [<Fact>]
 let ``Equality works as expected`` () =
@@ -23,3 +24,6 @@ let ``Equality works as expected`` () =
     Assert.Equal(p1a, p1b)
     Assert.NotEqual(p1a, p2)
     Assert.NotEqual(p1a :> obj, v1a :> obj)
+
+    Assert.Equal(Scalar.interpolateFrom 1.0 2.0 0.0, 1.0)
+    Assert.Equal(Scalar.interpolateFrom 1.0 2.0 1.0, 2.0)

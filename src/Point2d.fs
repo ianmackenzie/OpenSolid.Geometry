@@ -1,5 +1,6 @@
 module OpenSolid.Point2d
 
+open OpenSolid.Scalar
 open OpenSolid.Vector2d
 open OpenSolid.Direction2d
 

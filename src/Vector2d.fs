@@ -1,5 +1,7 @@
 module OpenSolid.Vector2d
 
+open OpenSolid.Scalar
+
 [<Struct>]
 type Vector2d =
     Vector2d of (float * float)
