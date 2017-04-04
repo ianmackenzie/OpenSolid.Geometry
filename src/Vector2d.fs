@@ -1,4 +1,3 @@
-[<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Vector2d
 
 [<Struct>]

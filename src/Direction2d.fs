@@ -1,4 +1,3 @@
-[<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Direction2d
 
 open OpenSolid.Vector2d
