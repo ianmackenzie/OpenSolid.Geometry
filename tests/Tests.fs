@@ -23,3 +23,6 @@ let ``Equality works as expected`` () =
     Assert.Equal(p1a, p1b)
     Assert.NotEqual(p1a, p2)
     Assert.NotEqual(p1a :> obj, v1a :> obj)
+
+    Assert.Equal(Vector2d(3.0, 4.0).Length, 5.0)
+    Assert.Equal(Vector2d(2.0, 3.0).Dot(Vector2d(1.0, 1.0)), 5.0)
