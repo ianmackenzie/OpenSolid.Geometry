@@ -56,8 +56,6 @@ let rotateBy angle =
         let (x, y) = components direction
         Direction2d (x * cosine - y * sine, x * sine + y * cosine)
 
-
-
 // mirrorAcross
 // relativeTo
 // placeIn

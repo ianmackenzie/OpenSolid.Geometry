@@ -52,7 +52,6 @@ let rotateBy angle =
         let yDirection = rotateDirection (yDirection frame)
         Frame2d (originPoint, xDirection, yDirection)
 
-
 // rotateAround
 // translateBy
 // translateAlongOwn

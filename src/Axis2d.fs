@@ -6,6 +6,3 @@ let inline originPoint (axis : Axis2d) =
 
 let inline direction (axis : Axis2d) =
     axis.Direction
-
-
-
