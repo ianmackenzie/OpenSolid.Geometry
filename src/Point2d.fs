@@ -23,8 +23,8 @@ let interpolateFrom firstPoint secondPoint parameter =
     let y = Scalar.interpolateFrom y1 y2 parameter
     Point2d (x, y)
 
-let midpoint first second =
-    interpolateFrom first second 0.5
+let midpoint firstPoint secondPoint =
+    interpolateFrom firstPoint secondPoint 0.5
 
 let vectorFrom firstPoint secondPoint =
     let (x1, y1) = coordinates firstPoint
