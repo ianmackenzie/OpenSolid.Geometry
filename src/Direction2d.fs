@@ -1,13 +1,13 @@
 [<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Direction2d
 
-let inline xComponent (direction: Direction2d) =
+let xComponent (direction: Direction2d) =
     direction.XComponent
 
-let inline yComponent (direction: Direction2d) =
+let yComponent (direction: Direction2d) =
     direction.YComponent
 
-let inline components (direction: Direction2d) =
+let components (direction: Direction2d) =
     (direction.XComponent, direction.YComponent)
 
 let toVector direction =

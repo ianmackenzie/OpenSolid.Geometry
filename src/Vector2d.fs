@@ -1,13 +1,13 @@
 [<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Vector2d
 
-let inline xComponent (vector: Vector2d) =
+let xComponent (vector: Vector2d) =
     vector.XComponent
 
-let inline yComponent (vector: Vector2d) =
+let yComponent (vector: Vector2d) =
     vector.YComponent
 
-let inline components (vector: Vector2d) =
+let components (vector: Vector2d) =
     (vector.XComponent, vector.YComponent)
 
 let zero =

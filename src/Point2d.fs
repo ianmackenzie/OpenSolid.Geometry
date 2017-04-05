@@ -1,13 +1,13 @@
 [<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Point2d
 
-let inline xCoordinate (point: Point2d) =
+let xCoordinate (point: Point2d) =
     point.XCoordinate
 
-let inline yCoordinate (point: Point2d) =
+let yCoordinate (point: Point2d) =
     point.YCoordinate
 
-let inline coordinates (point: Point2d) =
+let coordinates (point: Point2d) =
     (point.XCoordinate, point.YCoordinate)
 
 let origin =

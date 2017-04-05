@@ -1,13 +1,13 @@
 [<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Frame2d
 
-let inline originPoint (frame : Frame2d) =
+let originPoint (frame : Frame2d) =
     frame.OriginPoint
 
-let inline xDirection (frame : Frame2d) =
+let xDirection (frame : Frame2d) =
     frame.XDirection
 
-let inline yDirection (frame : Frame2d) =
+let yDirection (frame : Frame2d) =
     frame.YDirection
 
 let at point =
