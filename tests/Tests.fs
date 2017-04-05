@@ -3,7 +3,7 @@ module Tests
 open System
 open Xunit
 open OpenSolid.Vector2d
-open OpenSolid.Point2d
+open OpenSolid
 
 [<Fact>]
 let ``Equality works as expected`` () =
