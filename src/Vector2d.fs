@@ -107,6 +107,13 @@ let projectionIn direction vector =
     in_ direction (componentIn direction vector)
 
 
+type Vector2d with
+    member this.Length =
+        length this
+
+    member this.Dot(other) =
+        dotProduct this other
+
 // mirrorAcross
 // projectOnto
 // relativeTo
