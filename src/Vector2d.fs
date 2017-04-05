@@ -1,95 +1,110 @@
 [<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Vector2d
 
-[<Struct>]
-type Vector2d =
-    Vector2d of (float * float)
+let inline xComponent (vector: Vector2d) =
+    vector.XComponent
 
-type Vector2d with
-    static member components (Vector2d components_) =
-        components_
+let inline yComponent (vector: Vector2d) =
+    vector.YComponent
 
-    static member xComponent (Vector2d (x, _)) =
-        x
+let inline components (vector: Vector2d) =
+    (vector.XComponent, vector.YComponent)
 
-    static member yComponent (Vector2d (_, y)) =
-        y
+let zero =
+    Vector2d (0.0, 0.0)
 
-    static member zero =
-        Vector2d (0.0, 0.0)
+let polar (r, theta) =
+    Vector2d (r * cos theta, r * sin theta)
 
-    static member polar (r, theta) =
-        Vector2d (r * cos theta, r * sin theta)
+let perpendicularTo vector =
+    let (x, y) = components vector
+    Vector2d (-y, x)
 
-    static member perpendicularTo vector =
-        let (x, y) = Vector2d.components vector
-        Vector2d (-y, x)
+let interpolateFrom firstVector secondVector parameter =
+    let (x1, y1) = components firstVector
+    let (x2, y2) = components secondVector
+    let x = Scalar.interpolateFrom x1 x2 parameter
+    let y = Scalar.interpolateFrom y1 y2 parameter
+    Vector2d (x, y)
 
-    static member (~-) vector =
-        let (x, y) = Vector2d.components vector
-        Vector2d(-x, -y)
+let sum firstVector secondVector =
+    let (x1, y1) = components firstVector
+    let (x2, y2) = components secondVector
+    Vector2d (x1 + x2, y1 + y2)
 
-    static member (+) (firstVector, secondVector) =
-        let (x1, y1) = Vector2d.components firstVector
-        let (x2, y2) = Vector2d.components secondVector
-        Vector2d (x1 + x2, y1 + y2)
+let difference firstVector secondVector =
+    let (x1, y1) = components firstVector
+    let (x2, y2) = components secondVector
+    Vector2d (x1 - x2, y1 - y2)
 
-    static member (-) (firstVector, secondVector) =
-        let (x1, y1) = Vector2d.components firstVector
-        let (x2, y2) = Vector2d.components secondVector
-        Vector2d (x1 - x2, y1 - y2)
+let squaredLength vector =
+    let (x, y) = components vector
+    x * x + y * y
 
-    static member (*) (scale, vector) =
-        let (x, y) = Vector2d.components vector
-        Vector2d (scale * x, scale * y)
+let length vector =
+    sqrt (squaredLength vector)
 
-    static member (*) (vector, scale) =
-        let (x, y) = Vector2d.components vector
-        Vector2d (x * scale, y * scale)
+let equalWithin tolerance firstVector secondVector =
+    squaredLength (difference firstVector secondVector) <= tolerance * tolerance
 
-    static member (/) (vector, scale) =
-        let (x, y) = Vector2d.components vector
-        Vector2d (x / scale, y / scale)
+let dotProduct firstVector secondVector =
+    let (x1, y1) = components firstVector
+    let (x2, y2) = components secondVector
+    x1 * x2 + y1 * y2
 
-    static member interpolateFrom firstVector secondVector parameter =
-        let (x1, y1) = Vector2d.components firstVector
-        let (x2, y2) = Vector2d.components secondVector
-        let x = Scalar.interpolateFrom x1 x2 parameter
-        let y = Scalar.interpolateFrom y1 y2 parameter
-        Vector2d (x, y)
+let crossProduct firstVector secondVector =
+    let (x1, y1) = components firstVector
+    let (x2, y2) = components secondVector
+    x1 * y2 - y1 * x2
 
-    static member equalWithin tolerance firstVector secondVector =
-        Vector2d.squaredLength (secondVector - firstVector) <= tolerance * tolerance
+let componentIn (direction: Direction2d) vector =
+    let (vx, vy) = components vector
+    let dx = direction.XComponent
+    let dy = direction.YComponent
+    vx * dx + vy * dy
 
-    static member squaredLength vector =
-        let (x, y) = Vector2d.components vector
-        x * x + y * y
+let flip vector =
+    let (x, y) = components vector
+    Vector2d (-x, -y)
 
-    static member length vector =
-        sqrt (Vector2d.squaredLength vector)
+let scaleBy scale (vector : Vector2d) =
+    let (x, y) = components vector
+    Vector2d (x * scale, y * scale)
 
-    static member dotProduct firstVector secondVector =
-        let (x1, y1) = Vector2d.components firstVector
-        let (x2, y2) = Vector2d.components secondVector
-        x1 * x2 + y1 * y2
+let rotateBy angle =
+    let cosine = cos angle
+    let sine = sin angle
+    fun vector ->
+        let (x, y) = components vector
+        Vector2d (x * cosine - y * sine, x * sine + y * cosine)
 
-    static member crossProduct firstVector secondVector =
-        let (x1, y1) = Vector2d.components firstVector
-        let (x2, y2) = Vector2d.components secondVector
-        x1 * y2 - x2 * y1
+let in_ (direction: Direction2d) length =
+    let dx = direction.XComponent
+    let dy = direction.YComponent
+    Vector2d (length * dx, length * dy)
 
-    static member flip (vector : Vector2d) =
-        -vector
+let direction vector =
+    let vectorLength = length vector
+    if vectorLength > 0.0 then
+        let (x, y) = components vector
+        let dx = x / vectorLength
+        let dy = y / vectorLength
+        Some (Direction2d (dx, dy))
+    else
+        None
 
-    static member scaleBy scale (vector : Vector2d) =
-        vector * scale
+let lengthAndDirection vector =
+    let vectorLength = length vector
+    if vectorLength > 0.0 then
+        let (x, y) = components vector
+        let dx = x / vectorLength
+        let dy = y / vectorLength
+        Some (length, Direction2d (dx, dy))
+    else
+        None
 
-    static member rotateBy angle =
-        let cosine = cos angle
-        let sine = sin angle
-        fun vector ->
-            let (x, y) = Vector2d.components vector
-            Vector2d (x * cosine - y * sine, x * sine + y * cosine)
+let projectionIn direction vector =
+    in_ direction (componentIn direction vector)
 
 
 // mirrorAcross

@@ -1,77 +1,57 @@
 [<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Frame2d
 
-open OpenSolid.Vector2d
-open OpenSolid.Direction2d
-open OpenSolid.Point2d
-open OpenSolid.Axis2d
+let inline originPoint (frame : Frame2d) =
+    frame.OriginPoint
 
-type Frame2d(originPoint : Point2d, xDirection : Direction2d, yDirection : Direction2d) =
-    member inline internal this._originPoint =
-        originPoint
+let inline xDirection (frame : Frame2d) =
+    frame.XDirection
 
-    member inline internal this._xDirection =
-        xDirection
+let inline yDirection (frame : Frame2d) =
+    frame.YDirection
 
-    member inline internal this._yDirection =
-        yDirection
+let at point =
+    Frame2d (point, Direction2d.x, Direction2d.y)
 
-    static member originPoint (frame : Frame2d) =
-        frame._originPoint
+let xy =
+    at Point2d.origin
 
-    static member xDirection (frame : Frame2d) =
-        frame._xDirection
+let xAxis frame =
+    Axis2d (originPoint frame, xDirection frame)
 
-    static member yDirection (frame : Frame2d) =
-        frame._yDirection
+let yAxis frame =
+    Axis2d (originPoint frame, yDirection frame)
 
-    static member xy =
-        Frame2d.at Point2d.origin
+let isRightHanded frame =
+    let xDirectionVector = Direction2d.toVector (xDirection frame)
+    let yDirectionVector = Direction2d.toVector (yDirection frame)
+    Vector2d.crossProduct xDirectionVector yDirectionVector >= 0.0
 
-    static member at point =
-        Frame2d (point, Direction2d.x, Direction2d.y)
+let flipX frame =
+    let originPoint = originPoint frame
+    let xDirection = xDirection frame
+    let yDirection = yDirection frame
+    Frame2d (originPoint, Direction2d.flip xDirection, yDirection)
 
-    static member xAxis frame =
-        Axis2d (Frame2d.originPoint frame, Frame2d.xDirection frame)
+let flipY frame =
+    let originPoint = originPoint frame
+    let xDirection = xDirection frame
+    let yDirection = yDirection frame
+    Frame2d (originPoint, xDirection, Direction2d.flip yDirection)
 
-    static member yAxis frame =
-        Axis2d (Frame2d.originPoint frame, Frame2d.yDirection frame)
+let moveTo point frame =
+    let xDirection = xDirection frame
+    let yDirection = yDirection frame
+    Frame2d(point, xDirection, yDirection)
 
-    static member isRightHanded frame =
-        let xDirectionVector = Direction2d.toVector (Frame2d.xDirection frame)
-        let yDirectionVector = Direction2d.toVector (Frame2d.yDirection frame)
-        Vector2d.crossProduct xDirectionVector yDirectionVector >= 0.0
+let rotateBy angle =
+    let rotateDirection = Direction2d.rotateBy angle
+    fun frame ->
+        let originPoint = originPoint frame
+        let xDirection = rotateDirection (xDirection frame)
+        let yDirection = rotateDirection (yDirection frame)
+        Frame2d (originPoint, xDirection, yDirection)
 
-    static member flipX frame =
-        let originPoint = Frame2d.originPoint frame
-        let xDirection = Frame2d.xDirection frame
-        let yDirection = Frame2d.yDirection frame
-        Frame2d (originPoint, Direction2d.flip xDirection, yDirection)
-
-    static member flipY frame =
-        let originPoint = Frame2d.originPoint frame
-        let xDirection = Frame2d.xDirection frame
-        let yDirection = Frame2d.yDirection frame
-        Frame2d (originPoint, xDirection, Direction2d.flip yDirection)
-
-    static member moveTo point frame =
-        let xDirection = Frame2d.xDirection frame
-        let yDirection = Frame2d.yDirection frame
-        Frame2d(point, xDirection, yDirection)
-
-    static member rotateBy angle =
-        let rotateDirection = Direction2d.rotateBy angle
-        fun frame ->
-            let originPoint = Frame2d.originPoint frame
-            let xDirection = rotateDirection (Frame2d.xDirection frame)
-            let yDirection = rotateDirection (Frame2d.yDirection frame)
-            Frame2d (originPoint, xDirection, yDirection)
-
-type Point2d with
-    static member in_ frame (x, y) =
-        Frame2d.originPoint frame
-            + x * Frame2d.xDirection frame
-            + y * Frame2d.yDirection frame
 
 // rotateAround
 // translateBy

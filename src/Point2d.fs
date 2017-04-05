@@ -1,72 +1,75 @@
 [<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Point2d
 
-open OpenSolid.Vector2d
-open OpenSolid.Direction2d
+let inline xCoordinate (point: Point2d) =
+    point.XCoordinate
 
-[<Struct>]
-type Point2d =
-    Point2d of (float * float)
+let inline yCoordinate (point: Point2d) =
+    point.YCoordinate
 
-type Point2d with
-    static member coordinates (Point2d coordinates_) =
-        coordinates_
+let inline coordinates (point: Point2d) =
+    (point.XCoordinate, point.YCoordinate)
 
-    static member xCoordinate (Point2d (x, _)) =
-        x
+let origin =
+    Point2d (0.0, 0.0)
 
-    static member yCoordinate (Point2d (_, y)) =
-        y
+let polar (r, theta) =
+    Point2d (r * cos theta, r * sin theta)
 
-    static member origin =
-        Point2d (0.0, 0.0)
+let interpolateFrom firstPoint secondPoint parameter =
+    let (x1, y1) = coordinates firstPoint
+    let (x2, y2) = coordinates secondPoint
+    let x = Scalar.interpolateFrom x1 x2 parameter
+    let y = Scalar.interpolateFrom y1 y2 parameter
+    Point2d (x, y)
 
-    static member polar (r, theta) =
-        Point2d (r * cos theta, r * sin theta)
+let midpoint first second =
+    interpolateFrom first second 0.5
 
-    static member (+) (point, vector) =
-        let (px, py) = Point2d.coordinates point
-        let (vx, vy) = Vector2d.components vector
-        Point2d (px + vx, py + vy)
+let vectorFrom firstPoint secondPoint =
+    let (x1, y1) = coordinates firstPoint
+    let (x2, y2) = coordinates secondPoint
+    Vector2d (x2 - x1, y2 - y1)
 
-    static member (-) (point, vector) =
-        let (px, py) = Point2d.coordinates point
-        let (vx, vy) = Vector2d.components vector
-        Point2d (px - vx, py - vy)
+let squaredDistanceFrom firstPoint secondPoint =
+    Vector2d.squaredLength (vectorFrom firstPoint secondPoint)
 
-    static member (-) (firstPoint, secondPoint) =
-        let (x1, y1) = Point2d.coordinates firstPoint
-        let (x2, y2) = Point2d.coordinates secondPoint
-        Vector2d (x1 - x2, y1 - y2)
+let distanceFrom firstPoint secondPoint =
+    sqrt (squaredDistanceFrom firstPoint secondPoint)
 
-    static member interpolateFrom firstPoint secondPoint parameter =
-        let (x1, y1) = Point2d.coordinates firstPoint
-        let (x2, y2) = Point2d.coordinates secondPoint
-        let x = Scalar.interpolateFrom x1 x2 parameter
-        let y = Scalar.interpolateFrom y1 y2 parameter
-        Point2d (x, y)
+let equalWithin tolerance firstPoint secondPoint =
+    squaredDistanceFrom firstPoint secondPoint <= tolerance * tolerance
 
-    static member midpoint first second =
-        Point2d.interpolateFrom first second 0.5
+let directionFrom firstPoint secondPoint =
+    Vector2d.direction (vectorFrom firstPoint secondPoint)
 
-    static member vectorFrom (firstPoint : Point2d) (secondPoint : Point2d) =
-        secondPoint - firstPoint
+let translateBy displacement point =
+    let (dx, dy) = Vector2d.components displacement
+    let (px, py) = coordinates point
+    Point2d (px + dx, py + dy)
 
-    static member squaredDistanceFrom firstPoint secondPoint =
-        Vector2d.squaredLength (Point2d.vectorFrom firstPoint secondPoint)
+let scaleAbout centerPoint scale point =
+    let displacement = vectorFrom centerPoint point
+    translateBy (Vector2d.scaleBy scale displacement) centerPoint
 
-    static member distanceFrom firstPoint secondPoint =
-        sqrt (Point2d.squaredDistanceFrom firstPoint secondPoint)
+let along (axis: Axis2d) distance =
+    translateBy (Vector2d.in_ axis.Direction distance) axis.OriginPoint
 
-    static member equalWithin tolerance firstPoint secondPoint =
-        let squaredDistance = Point2d.squaredDistanceFrom firstPoint secondPoint
-        squaredDistance <= tolerance * tolerance
+let distanceAlong (axis: Axis2d) =
+    vectorFrom axis.OriginPoint >> Vector2d.componentIn axis.Direction
 
-    static member directionFrom firstPoint secondPoint =
-        Vector2d.direction (Point2d.vectorFrom firstPoint secondPoint)
+let signedDistanceFrom (axis: Axis2d) point =
+    let displacement = vectorFrom axis.OriginPoint point
+    let directionVector = Direction2d.toVector axis.Direction
+    Vector2d.crossProduct directionVector displacement
 
-    static member scaleAbout centerPoint scale point =
-        centerPoint + scale * (point - centerPoint)
+let in_ (frame: Frame2d) (x, y) =
+    let xVector = Vector2d.in_ frame.XDirection x
+    let yVector = Vector2d.in_ frame.YDirection y
+    frame.OriginPoint
+        |> translateBy xVector
+        |> translateBy yVector
+
 
 
 //  rotateAround

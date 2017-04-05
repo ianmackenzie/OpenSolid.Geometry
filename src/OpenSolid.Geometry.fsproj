@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Types.fs" />
     <Compile Include="Scalar.fs" />
     <Compile Include="Vector2d.fs" />
     <Compile Include="Direction2d.fs" />
