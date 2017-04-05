@@ -1,6 +1,6 @@
 namespace OpenSolid
 
-type Vector2d(xComponent: float, yComponent: float) =
+type Vector2d (xComponent: float, yComponent: float) =
     member this.XComponent = xComponent
 
     member this.YComponent = yComponent
@@ -8,12 +8,12 @@ type Vector2d(xComponent: float, yComponent: float) =
     override this.GetHashCode() =
         hash (this.XComponent, this.YComponent)
 
-    override this.Equals(other: obj) =
+    override this.Equals (other: obj) =
         match other with
         | :? Vector2d as vector -> this.Equals(vector)
         | _ -> false
 
-    member this.Equals(vector: Vector2d) =
+    member this.Equals (vector: Vector2d) =
         let x1 = this.XComponent
         let y1 = this.YComponent
         let x2 = vector.XComponent
@@ -58,7 +58,7 @@ type Vector2d(xComponent: float, yComponent: float) =
         let y = vector.YComponent
         Vector2d (x / scale, y / scale)
 
-type Direction2d(xComponent: float, yComponent: float) =
+type Direction2d (xComponent: float, yComponent: float) =
     member this.XComponent = xComponent
 
     member this.YComponent = yComponent
@@ -66,12 +66,12 @@ type Direction2d(xComponent: float, yComponent: float) =
     override this.GetHashCode() =
         hash (this.XComponent, this.YComponent)
 
-    override this.Equals(other: obj) =
+    override this.Equals (other: obj) =
         match other with
         | :? Direction2d as direction -> this.Equals(direction)
         | _ -> false
 
-    member this.Equals(direction: Direction2d) =
+    member this.Equals (direction: Direction2d) =
         let x1 = this.XComponent
         let y1 = this.YComponent
         let x2 = direction.XComponent
@@ -97,7 +97,7 @@ type Direction2d(xComponent: float, yComponent: float) =
         let y = direction.YComponent
         Vector2d (x * scale, y * scale)
 
-type Point2d(xCoordinate: float, yCoordinate: float) =
+type Point2d (xCoordinate: float, yCoordinate: float) =
     member this.XCoordinate = xCoordinate
 
     member this.YCoordinate = yCoordinate
@@ -105,12 +105,12 @@ type Point2d(xCoordinate: float, yCoordinate: float) =
     override this.GetHashCode() =
         hash (this.XCoordinate, this.YCoordinate)
 
-    override this.Equals(other: obj) =
+    override this.Equals (other: obj) =
         match other with
         | :? Point2d as point -> this.Equals(point)
         | _ -> false
 
-    member this.Equals(point: Point2d) =
+    member this.Equals (point: Point2d) =
         let x1 = this.XCoordinate
         let y1 = this.YCoordinate
         let x2 = point.XCoordinate
@@ -144,7 +144,7 @@ type Point2d(xCoordinate: float, yCoordinate: float) =
         let y2 = secondPoint.YCoordinate
         Vector2d (x1 - x2, y1 - y2)
 
-type Axis2d(originPoint : Point2d, direction : Direction2d) =
+type Axis2d (originPoint : Point2d, direction : Direction2d) =
     member this.OriginPoint = originPoint
 
     member this.Direction = direction
