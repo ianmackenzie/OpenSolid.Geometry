@@ -42,12 +42,8 @@ type Direction2d(xComponent: float, yComponent: float) =
 
     member this.YComponent = yComponent
 
-    member this.ComponentIn (other: Direction2d) =
         let x1 = this.XComponent
         let y1 = this.YComponent
-        let x2 = other.XComponent
-        let y2 = other.YComponent
-        x1 * x2 + y1 * y2
 
     static member (~-) (direction: Direction2d) =
         Direction2d(-direction.XComponent, -direction.YComponent)
