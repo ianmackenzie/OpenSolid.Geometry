@@ -24,5 +24,14 @@ let ``Equality works as expected`` () =
     Assert.NotEqual(p1a, p2)
     Assert.NotEqual(p1a :> obj, v1a :> obj)
 
-    Assert.Equal(Vector2d(3.0, 4.0).Length, 5.0)
-    Assert.Equal(Vector2d(2.0, 3.0).Dot(Vector2d(1.0, 1.0)), 5.0)
+
+[<Fact>]
+let ``Length works as expected`` () =
+    let vector = Vector2d(3.0, 4.0)
+    Assert.Equal(Vector2d.length vector, 5.0)
+
+[<Fact>]
+let ``Dot product works as expected`` () =
+    let v1 = Vector2d(2.0, 3.0)
+    let v2 = Vector2d(1.0, 1.0)
+    Assert.Equal(Vector2d.dotProduct v1 v2, 5.0)

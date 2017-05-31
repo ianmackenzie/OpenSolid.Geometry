@@ -1,8 +1,8 @@
 [<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Axis2d
 
-let originPoint (axis : Axis2d) =
-    axis.OriginPoint
+let originPoint (Axis2d(originPoint, _)) =
+    originPoint
 
-let direction (axis : Axis2d) =
-    axis.Direction
+let direction (Axis2d(_, direction)) =
+    direction

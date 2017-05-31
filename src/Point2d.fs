@@ -1,35 +1,31 @@
 [<CompilationRepresentationAttribute(CompilationRepresentationFlags.ModuleSuffix)>]
 module OpenSolid.Point2d
 
-let xCoordinate (point: Point2d) =
-    point.XCoordinate
+let xCoordinate (Point2d(x, _)) =
+    x
 
-let yCoordinate (point: Point2d) =
-    point.YCoordinate
+let yCoordinate (Point2d(_, y)) =
+    y
 
-let coordinates (point: Point2d) =
-    (point.XCoordinate, point.YCoordinate)
+let coordinates (Point2d(x, y)) =
+    (x, y)
 
 let origin =
-    Point2d (0.0, 0.0)
+    Point2d(0.0, 0.0)
 
 let polar (r, theta) =
-    Point2d (r * cos theta, r * sin theta)
+    Point2d(r * cos theta, r * sin theta)
 
-let interpolateFrom firstPoint secondPoint parameter =
-    let (x1, y1) = coordinates firstPoint
-    let (x2, y2) = coordinates secondPoint
+let interpolateFrom (Point2d(x1, y1)) (Point2d(x2, y2)) parameter =
     let x = Scalar.interpolateFrom x1 x2 parameter
     let y = Scalar.interpolateFrom y1 y2 parameter
-    Point2d (x, y)
+    Point2d(x, y)
 
 let midpoint firstPoint secondPoint =
     interpolateFrom firstPoint secondPoint 0.5
 
-let vectorFrom firstPoint secondPoint =
-    let (x1, y1) = coordinates firstPoint
-    let (x2, y2) = coordinates secondPoint
-    Vector2d (x2 - x1, y2 - y1)
+let vectorFrom (Point2d(x1, y1)) (Point2d(x2, y2)) =
+    Vector2d(x2 - x1, y2 - y1)
 
 let squaredDistanceFrom firstPoint secondPoint =
     Vector2d.squaredLength (vectorFrom firstPoint secondPoint)
@@ -43,32 +39,26 @@ let equalWithin tolerance firstPoint secondPoint =
 let directionFrom firstPoint secondPoint =
     Vector2d.direction (vectorFrom firstPoint secondPoint)
 
-let translateBy displacement point =
-    let (dx, dy) = Vector2d.components displacement
-    let (px, py) = coordinates point
-    Point2d (px + dx, py + dy)
+let translateBy (Vector2d(vx, vy)) (Point2d(px, py)) =
+    Point2d (px + vx, py + vy)
 
 let scaleAbout centerPoint scale point =
     let displacement = vectorFrom centerPoint point
     translateBy (Vector2d.scaleBy scale displacement) centerPoint
 
-let along (axis: Axis2d) distance =
-    translateBy (Vector2d.in_ axis.Direction distance) axis.OriginPoint
+let along (Axis2d(originPoint, direction)) distance =
+    translateBy (Vector2d.in_ direction distance) originPoint
 
-let distanceAlong (axis: Axis2d) =
-    vectorFrom axis.OriginPoint >> Vector2d.componentIn axis.Direction
+let distanceAlong (Axis2d(originPoint, direction)) point =
+    vectorFrom originPoint point |> Vector2d.componentIn direction
 
-let signedDistanceFrom (axis: Axis2d) point =
-    let displacement = vectorFrom axis.OriginPoint point
-    let directionVector = Direction2d.toVector axis.Direction
+let signedDistanceFrom (Axis2d(originPoint, direction)) point =
+    let displacement = vectorFrom originPoint point
+    let directionVector = Direction2d.toVector direction
     Vector2d.crossProduct directionVector displacement
 
-let in_ (frame: Frame2d) (x, y) =
-    let xVector = Vector2d.in_ frame.XDirection x
-    let yVector = Vector2d.in_ frame.YDirection y
-    frame.OriginPoint
-        |> translateBy xVector
-        |> translateBy yVector
+let in_ (Frame2d(Point2d(x0, y0), Direction2d(x1, y1), Direction2d(x2, y2))) (x, y) =
+    Point2d(x0 + x * x1 + y * x2, y0 + x * y1 + y * y2)
 
 //  rotateAround
 //  translateBy
