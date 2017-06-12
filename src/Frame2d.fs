@@ -11,16 +11,26 @@ let yDirection (Frame2d(_, _, yDirection)) =
     yDirection
 
 let at point =
-    Frame2d(point, Direction2d.x, Direction2d.y)
+    Frame2d(
+        originPoint = point,
+        xDirection = Direction2d.x,
+        yDirection = Direction2d.y
+    )
 
 let xy =
     at Point2d.origin
 
 let xAxis frame =
-    Axis2d(originPoint frame, xDirection frame)
+    Axis2d(
+        originPoint = originPoint frame,
+        direction = xDirection frame
+    )
 
 let yAxis frame =
-    Axis2d(originPoint frame, yDirection frame)
+    Axis2d(
+        originPoint = originPoint frame,
+        direction = yDirection frame
+    )
 
 let isRightHanded frame =
     let xDirectionVector = Direction2d.toVector (xDirection frame)
@@ -28,29 +38,34 @@ let isRightHanded frame =
     Vector2d.crossProduct xDirectionVector yDirectionVector >= 0.0
 
 let flipX frame =
-    let originPoint = originPoint frame
-    let xDirection = xDirection frame
-    let yDirection = yDirection frame
-    Frame2d(originPoint, Direction2d.flip xDirection, yDirection)
+    Frame2d(
+        originPoint = originPoint frame,
+        xDirection = Direction2d.flip (xDirection frame),
+        yDirection = yDirection frame
+    )
 
 let flipY frame =
-    let originPoint = originPoint frame
-    let xDirection = xDirection frame
-    let yDirection = yDirection frame
-    Frame2d(originPoint, xDirection, Direction2d.flip yDirection)
+    Frame2d(
+        originPoint = originPoint frame,
+        xDirection = xDirection frame,
+        yDirection = Direction2d.flip (yDirection frame)
+    )
 
 let moveTo point frame =
-    let xDirection = xDirection frame
-    let yDirection = yDirection frame
-    Frame2d(point, xDirection, yDirection)
+    Frame2d(
+        originPoint = point,
+        xDirection = xDirection frame,
+        yDirection = yDirection frame
+    )
 
 let rotateBy angle =
     let rotateDirection = Direction2d.rotateBy angle
     fun frame ->
-        let originPoint = originPoint frame
-        let xDirection = rotateDirection (xDirection frame)
-        let yDirection = rotateDirection (yDirection frame)
-        Frame2d(originPoint, xDirection, yDirection)
+        Frame2d(
+            originPoint = originPoint frame,
+            xDirection = rotateDirection (xDirection frame),
+            yDirection = rotateDirection (yDirection frame)
+        )
 
 // rotateAround
 // translateBy
