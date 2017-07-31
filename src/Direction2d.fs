@@ -4,12 +4,10 @@ module OpenSolid.Direction2d
 let components (Direction2d components) =
     components
 
-let xComponent direction =
-    let (x, _) = components direction
+let xComponent (Direction2d (x, _)) =
     x
 
-let yComponent  direction =
-    let (_, y) = components direction
+let yComponent  (Direction2d (_, y)) =
     y
 
 let toVector direction =

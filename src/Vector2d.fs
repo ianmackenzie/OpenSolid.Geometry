@@ -4,12 +4,10 @@ module OpenSolid.Vector2d
 let components (Vector2d components) =
     components
 
-let xComponent vector =
-    let (x, _) = components vector
+let xComponent (Vector2d (x, _)) =
     x
 
-let yComponent vector =
-    let (_, y) = components vector
+let yComponent (Vector2d (_, y)) =
     y
 
 let zero =

@@ -4,12 +4,10 @@ module OpenSolid.Point2d
 let coordinates (Point2d coordinates) =
     coordinates
 
-let xCoordinate point =
-    let (x, _) = coordinates point
+let xCoordinate (Point2d (x, _)) =
     x
 
-let yCoordinate point =
-    let (_, y) = coordinates point
+let yCoordinate (Point2d (_, y)) =
     y
 
 let origin =
