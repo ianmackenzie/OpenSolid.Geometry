@@ -1,19 +1,17 @@
 ﻿<Project Sdk="FSharp.NET.Sdk;Microsoft.NET.Sdk">
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net46</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Types.fs" />
-    <Compile Include="Scalar.fs" />
-    <Compile Include="Vector2d.fs" />
-    <Compile Include="Direction2d.fs" />
-    <Compile Include="Point2d.fs" />
-    <Compile Include="Axis2d.fs" />
-    <Compile Include="Frame2d.fs" />
+    <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Chiron" Version="6.2.1" />
     <PackageReference Include="FSharp.Core" Version="4.1.*" />
     <PackageReference Include="FSharp.NET.Sdk" Version="1.0.*" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\OpenSolid.Geometry.fsproj" />
   </ItemGroup>
 </Project>
