@@ -1,15 +1,17 @@
 ﻿open System
 
-open Chiron
-
 open OpenSolid
-open OpenSolid.Vector2d
+
+let degrees degrees_ =
+    degrees_ * Math.PI / 180.0
 
 [<EntryPoint>]
 let main argv =
-    let vector = Vector2d(2.0, 3.0)
-    printfn "%s" (Json.format (Json.serialize vector))
-    let json = """{"originPoint": {"x": 3, "y": 4}, "direction": {"x": 1, "yz": 0}}"""
-    let deserialized : Choice<Axis2d, string> = Json.tryDeserialize (Json.parse json)
-    printfn "%A" deserialized
+    let vector = Vector2d.fromComponents ( 2.0, 3.0 )
+    printfn "Vector length: %f" (Vector2d.length vector)
+    let frame =
+        Frame2d.fromOriginAndXDirection
+            { originPoint = Point2d.fromCoordinates ( 1.0, 1.0 )
+              xDirection = Direction2d.fromAngle (degrees 30.0) }
+    printfn "Frame: %O" frame
     0
